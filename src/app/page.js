@@ -13,7 +13,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="w-11/12 mx-auto mt-5 columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4 space-y-4">
+    <div className="w-11/12 mx-auto mt-5 columns-1 sm:columns-3 md:columns-4 lg:columns-6 gap-4 space-y-4">
 
       {posts.map((post) => (
         <div
@@ -24,11 +24,10 @@ const HomePage = () => {
             <div className="relative w-full aspect-auto">
               <Image
                 src={post.imageUrl}
-                alt="post"
+                alt="Image"
                 width={800}
                 height={800}
                 className="w-full h-auto object-cover"
-                unoptimized
               />
             </div>
           )}
