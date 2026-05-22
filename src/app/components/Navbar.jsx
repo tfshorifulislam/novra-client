@@ -4,13 +4,14 @@ import { useState } from "react"
 import Link from "next/link"
 import ToggleTheme from "./ToggleTheam"
 import { ProfileAvaterDropDownMenu } from "./ProfileAvaterDropDown"
+import { Button } from "@heroui/react"
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-black/60 backdrop-blur-xl">
-      
+
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
 
         {/* Logo */}
@@ -20,8 +21,6 @@ export default function Navbar() {
         >
           Novra
         </Link>
-
-       
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
@@ -39,10 +38,15 @@ export default function Navbar() {
           {/* Profile */}
           <ProfileAvaterDropDownMenu />
 
+          {/* Login Button */}
+          <Button>
+            Login
+          </Button>
+
         </div>
       </div>
 
-     
+
     </header>
   )
 }
