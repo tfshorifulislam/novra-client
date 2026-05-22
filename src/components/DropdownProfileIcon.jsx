@@ -1,70 +1,182 @@
 'use client'
 import { authClient } from "@/lib/auth-client";
-import { Avatar, Dropdown, Label } from "@heroui/react";
-import { BsPersonSlash } from "react-icons/bs";
-import { FaArrowUpRightFromSquare } from "react-icons/fa6";
-import { GiEarbuds } from "react-icons/gi";
+import { Avatar, Dropdown } from "@heroui/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export function DropdownProfileIcon() {
+export function DropdownProfileIcon({ user }) {
 
-  const { data: session } = authClient.useSession()
-  // console.log('session', session)
-  const user = session?.user
-  console.log(user)
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    setOpen(false);
+    router.refresh();
+    router.push('/')
+  };
 
   return (
-    <Dropdown>
-      <Dropdown.Trigger className="rounded-full">
-        <Avatar>
-          <Avatar.Image
-            alt="Junior Garcia"
-            src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
-          />
-          <Avatar.Fallback delayMs={600}>JD</Avatar.Fallback>
-        </Avatar>
-      </Dropdown.Trigger>
-      <Dropdown.Popover>
-        <div className="px-3 pt-3 pb-1">
-          <div className="flex items-center gap-2">
-            <Avatar size="sm">
-              <Avatar.Image
-                alt="Jane"
-                src="https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg"
-              />
-              <Avatar.Fallback delayMs={600}>JD</Avatar.Fallback>
-            </Avatar>
-            <div className="flex flex-col gap-0">
-              <p className="text-sm leading-5 font-medium">Jane Doe</p>
-              <p className="text-xs leading-none text-muted">jane@example.com</p>
-            </div>
-          </div>
+    <Dropdown
+      placement="bottom-end"
+      isOpen={open}
+      onOpenChange={setOpen}
+    >
+
+      {/* Trigger */}
+      <Dropdown.Trigger>
+
+        <div className="outline-none">
+
+          <Avatar
+            size="md"
+            className="h-11 w-11 cursor-pointer border border-slate-200 transition hover:opacity-90 sm:h-10 sm:w-10">
+            <Avatar.Image
+              alt={user?.name}
+              src={user?.image}
+            />
+
+            <Avatar.Fallback className="bg-slate-900 text-sm font-semibold text-white">
+              {user?.name?.charAt(0).toUpperCase()}
+            </Avatar.Fallback>
+          </Avatar>
         </div>
-        <Dropdown.Menu>
-          <Dropdown.Item id="dashboard" textValue="Dashboard">
-            <Label>Dashboard</Label>
-          </Dropdown.Item>
-          <Dropdown.Item id="profile" textValue="Profile">
-            <Label>Profile</Label>
-          </Dropdown.Item>
-          <Dropdown.Item id="settings" textValue="Settings">
-            <div className="flex w-full items-center justify-between gap-2">
-              <Label>Settings</Label>
-              <GiEarbuds className="size-3.5 text-muted" />
+      </Dropdown.Trigger>
+
+      {/* Dropdown */}
+      <Dropdown.Popover
+        className="
+                    w-[92vw] max-w-[340px]
+                    overflow-hidden
+                    rounded-3xl
+                    border
+                    border-slate-200
+                    bg-white
+                    p-0
+                    shadow-2xl
+                    sm:w-72
+                "
+      >
+
+        {/* Profile */}
+        <div className="border-b border-slate-100 px-5 py-5">
+
+          <Link
+            href="/profile"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-4 rounded-2xl transition hover:bg-slate-50"
+          >
+
+            <Avatar
+              size="lg"
+              className="border border-slate-200"
+            >
+              <Avatar.Image
+                alt={user?.name}
+                src={user?.image}
+              />
+
+              <Avatar.Fallback className="bg-slate-900 text-white">
+                {user?.name?.charAt(0).toUpperCase()}
+              </Avatar.Fallback>
+            </Avatar>
+
+            <div className="min-w-0">
+
+              <h3 className="truncate text-base font-semibold text-slate-900">
+                {user?.name}
+              </h3>
+
+              <p className="truncate text-sm text-slate-500">
+                {user?.email}
+              </p>
             </div>
-          </Dropdown.Item>
-          <Dropdown.Item id="new-project" textValue="New project">
-            <div className="flex w-full items-center justify-between gap-2">
-              <Label>Create Team</Label>
-              <BsPersonSlash className="size-3.5 text-muted" />
-            </div>
-          </Dropdown.Item>
-          <Dropdown.Item id="logout" textValue="Logout" variant="danger">
-            <div className="flex w-full items-center justify-between gap-2">
-              <Label>Log Out</Label>
-              <FaArrowUpRightFromSquare className="size-3.5 text-danger" />
-            </div>
-          </Dropdown.Item>
-        </Dropdown.Menu>
+          </Link>
+        </div>
+
+        {/* Menu */}
+        <div className="p-2">
+
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            className="
+                            flex
+                            items-center
+                            rounded-2xl
+                            px-4
+                            py-3.5
+                            text-sm
+                            font-medium
+                            text-slate-700
+                            transition
+                            hover:bg-slate-100
+                        "
+          >
+            Dashboard
+          </Link>
+
+          <Link
+            href="/profile"
+            onClick={() => setOpen(false)}
+            className="
+                            flex
+                            items-center
+                            rounded-2xl
+                            px-4
+                            py-3.5
+                            text-sm
+                            font-medium
+                            text-slate-700
+                            transition
+                            hover:bg-slate-100
+                        "
+          >
+            Profile
+          </Link>
+
+          <Link
+            href="/message"
+            onClick={() => setOpen(false)}
+            className="
+                            flex
+                            items-center
+                            rounded-2xl
+                            px-4
+                            py-3.5
+                            text-sm
+                            font-medium
+                            text-slate-700
+                            transition
+                            hover:bg-slate-100
+                        "
+          >
+            Message
+          </Link>
+
+          <div className="my-2 h-px bg-slate-100"></div>
+
+          {/* Logout */}
+          <button
+            onClick={handleSignOut}
+            className="
+                            flex
+                            w-full
+                            items-center
+                            rounded-2xl
+                            px-4
+                            py-3.5
+                            text-sm
+                            font-medium
+                            text-red-500
+                            transition
+                            hover:bg-red-50
+                        "
+          >
+            Log Out
+          </button>
+        </div>
       </Dropdown.Popover>
     </Dropdown>
   );
