@@ -4,6 +4,7 @@ import Providers from "./providers"
 
 import { Geist, Geist_Mono } from "next/font/google"
 import SideBar from "./components/SideBar"
+import MobileButtonMenuBar from "./components/MobileButtomMenuBar"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,7 @@ export default function RootLayout({ children }) {
             <main className="flex-1 min-h-screen">
               {children}
             </main>
-
+            <MobileButtonMenuBar />
           </div>
 
         </Providers>
