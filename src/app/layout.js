@@ -19,27 +19,35 @@ const geistMono = Geist_Mono({
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+     <body className={`${geistSans.variable} ${geistMono.variable}`}>
+  <Providers>
 
-        <Providers>
-          <Navbar />
+    <Navbar />
 
-          {/* MAIN LAYOUT WRAPPER */}
-          <div className="flex">
+    {/* MAIN WRAPPER */}
+    <div className="max-w-7xl mx-auto grid grid-cols-12">
 
-            {/* SIDEBAR (fixed left column) */}
-            <SideBar />
+      {/* LEFT SIDEBAR */}
+      <div className="hidden md:block md:col-span-3">
+        <SideBar />
+      </div>
 
-            {/* PAGE CONTENT */}
-            <main className="flex-1 min-h-screen">
-              {children}
-            </main>
-            <MobileButtonMenuBar />
-          </div>
+      {/* CENTER FEED */}
+      <main className="col-span-12 md:col-span-9 lg:col-span-6 min-h-screen">
+        {children}
+      </main>
 
-        </Providers>
+      {/* RIGHT EMPTY SIDEBAR */}
+      <div className="hidden lg:block lg:col-span-3">
+      </div>
 
-      </body>
+    </div>
+
+    {/* MOBILE NAV */}
+    <MobileButtonMenuBar />
+
+  </Providers>
+</body>
     </html>
   );
 }

@@ -10,28 +10,77 @@ const PostCreatePage = () => {
   const [mounted, setMounted] = useState(false);
   const [text, setText] = useState("");
   const [preview, setPreview] = useState(null);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // IMAGE SELECT
   const handleImage = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setFile(file);
     setPreview(URL.createObjectURL(file));
   };
 
+  // CLEAR
   const handleClear = () => {
     setText("");
-    setPreview("");
+    setPreview(null);
+    setFile(null);
 
     if (fileRef.current) {
       fileRef.current.value = "";
     }
   };
 
-  // 🔥 prevents hydration mismatch completely
+  // POST FUNCTION (🔥 FIXED)
+  const handlePost = async () => {
+    try {
+      setLoading(true);
+
+      let imageUrl = "";
+
+      // STEP 1: upload image if exists
+      if (file) {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        imageUrl = data.imageUrl;
+      }
+
+      // STEP 2: create post
+      await fetch("http://localhost:5000/posts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text,
+          imageUrl,
+        }),
+      });
+
+      // RESET UI
+      handleClear();
+
+      alert("Post created!");
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!mounted) return null;
 
   return (
@@ -47,18 +96,7 @@ const PostCreatePage = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="What's on your mind?"
-          className="
-            w-full resize-none
-            min-h-[160px]
-            p-4
-            rounded-2xl
-            border border-neutral-200 dark:border-neutral-800
-            bg-neutral-50 dark:bg-neutral-900
-            text-sm sm:text-base
-            outline-none
-            focus:min-h-[220px]
-            transition-all
-          "
+          className="w-full resize-none min-h-[160px] p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-sm sm:text-base outline-none focus:min-h-[220px] transition-all"
         />
 
         {/* PREVIEW */}
@@ -106,10 +144,12 @@ const PostCreatePage = () => {
             </Button>
 
             <Button
-              disabled={!text.trim()}
+              type="button"
+              onClick={handlePost}
+              disabled={!text.trim() || loading}
               className="px-6 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black"
             >
-              Post
+              {loading ? "Posting..." : "Post"}
             </Button>
 
           </div>
