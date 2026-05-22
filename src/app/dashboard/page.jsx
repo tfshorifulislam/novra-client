@@ -40,7 +40,7 @@ const dashboard = () => {
     };
 
     return (
-        <div className="max-w-2xl mx-auto px-4 py-6">
+        <div className="max-w-2xl mx-auto  border py-6">
 
             {posts.map((post, index) => {
                 const liked = likedPosts.has(post._id);

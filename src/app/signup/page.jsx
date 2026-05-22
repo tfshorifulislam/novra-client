@@ -10,6 +10,7 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
+import Link from "next/link";
 
 const SignupPage = () => {
   return (
@@ -92,9 +93,9 @@ const SignupPage = () => {
         {/* FOOTER */}
         <p className="text-center text-sm text-neutral-500 mt-6">
           Already have an account?{" "}
-          <span className="text-black dark:text-white font-medium cursor-pointer">
+          <Link href={'/login'} className="text-black dark:text-white font-medium cursor-pointer">
             Login
-          </span>
+          </Link>
         </p>
 
       </div>

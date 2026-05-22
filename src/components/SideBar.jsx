@@ -24,7 +24,7 @@ const SideBar = () => {
         <aside className="sticky top-0 hidden md:flex h-screen md:w-55 lg:w-65 flex-col border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 px-3 py-6">
 
             {/* USER CARD */}
-            <Link href='/profile' className="mb-6 cursor-pointer flex items-center gap-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 p-3">
+            <Link href='/profile' className="mb-6 cursor-pointer flex items-center gap-3 border-b  py-3">
 
                 <div className="relative h-10 w-10 overflow-hidden rounded-full">
                     <Image
