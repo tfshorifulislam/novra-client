@@ -1,3 +1,4 @@
+'use client'
 import {Avatar, Dropdown, Label} from "@heroui/react";
 import { BsPersonSlash } from "react-icons/bs";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";

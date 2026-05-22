@@ -18,28 +18,22 @@ const HomePage = () => {
       {posts.map((post) => (
         <div
           key={post._id}
-          className="break-inside-avoid rounded-xl bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 overflow-hidden mb-4"
+          className="break-inside-avoid cursor-pointer rounded-xl bg-white dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 overflow-hidden mb-4"
         >
-          {post.text && (
-            <p className="p-3 text-sm text-neutral-800 dark:text-neutral-200">
-              {post.text}
-            </p>
-          )}
-
           {post.imageUrl && (
-  <div className="relative w-full aspect-auto">
+            <div className="relative w-full aspect-auto">
 
-    <Image
-      src={post.imageUrl}
-      alt="post"
-      width={800}
-      height={800}
-      className="w-full h-auto object-cover"
-      unoptimized
-    />
+              <Image
+                src={post.imageUrl}
+                alt="post"
+                width={800}
+                height={800}
+                className="w-full h-auto object-cover"
+                unoptimized
+              />
 
-  </div>
-)}
+            </div>
+          )}
         </div>
       ))}
 
