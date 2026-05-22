@@ -1,42 +1,48 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import ToggleTheme from "./ToggleTheam"
-
+import Link from "next/link";
+import ToggleTheme from "./ToggleTheam";
+import { FiSearch } from "react-icons/fi";
+import { DropdownProfileIcon } from "./DropdownProfileIcon";
 
 export default function Navbar() {
- 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-black/60 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-black/60 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800">
 
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
+      <div className="w-11/12 mx-auto flex items-center h-14">
 
-        {/* Logo */}
-        <Link
-          href="/dashboard"
-          className="text-xl font-semibold tracking-tight font-sora"
-        >
-          Novra
-        </Link>
+        {/* LEFT - LOGO */}
+        <div className="shrink-0">
+          <Link
+            href="/"
+            className="text-xl font-semibold tracking-tight"
+          >
+            Novra
+          </Link>
+        </div>
 
-        {/* Right Side */}
-        <div className="flex items-center gap-3">
+        {/* CENTER - SEARCH (Pinterest style full flex) */}
+        <div className="flex-1 px-4">
+          <div className="relative w-full">
 
-          {/* Search */}
-          <input
-            type="text"
-            placeholder="Search..."
-            className="hidden md:block px-3 py-1.5 text-sm rounded-lg border border-neutral-200 dark:border-neutral-800 bg-transparent outline-none focus:ring-1 focus:ring-neutral-400 dark:focus:ring-neutral-600"
-          />
+            <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" />
 
-          {/* Theme */}
+            <input
+              type="text"
+              placeholder="Search"
+              className="w-full rounded-lg bg-neutral-100 dark:bg-neutral-900 pl-11 pr-4 py-2 text-sm outline-none border border-transparent focus:border-neutral-300 dark:focus:border-neutral-700 focus:bg-white dark:focus:bg-neutral-950 transition" />
+          </div>
+        </div>
+
+        {/* RIGHT - ICONS */}
+        <div className="flex items-center gap-3 shrink-0">
+
           <ToggleTheme />
+          <DropdownProfileIcon />
 
         </div>
+
       </div>
-
-
     </header>
-  )
+  );
 }
