@@ -1,10 +1,17 @@
 'use client'
-import {Avatar, Dropdown, Label} from "@heroui/react";
+import { authClient } from "@/lib/auth-client";
+import { Avatar, Dropdown, Label } from "@heroui/react";
 import { BsPersonSlash } from "react-icons/bs";
 import { FaArrowUpRightFromSquare } from "react-icons/fa6";
 import { GiEarbuds } from "react-icons/gi";
 
 export function DropdownProfileIcon() {
+
+  const { data: session } = authClient.useSession()
+  // console.log('session', session)
+  const user = session?.user
+  console.log(user)
+
   return (
     <Dropdown>
       <Dropdown.Trigger className="rounded-full">
