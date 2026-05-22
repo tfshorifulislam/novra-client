@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar"
 import Providers from "./providers"
 
 import { Geist, Geist_Mono } from "next/font/google"
+import SideBar from "./components/SideBar"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,11 +19,26 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+
         <Providers>
           <Navbar />
-          {children}
+
+          {/* MAIN LAYOUT WRAPPER */}
+          <div className="flex">
+
+            {/* SIDEBAR (fixed left column) */}
+            <SideBar />
+
+            {/* PAGE CONTENT */}
+            <main className="flex-1 min-h-screen">
+              {children}
+            </main>
+
+          </div>
+
         </Providers>
+
       </body>
     </html>
-  )
+  );
 }
