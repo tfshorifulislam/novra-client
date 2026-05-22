@@ -30,7 +30,7 @@ const SignupPage = () => {
     // console.log(data, error)
     if (data) {
       toast.success(`Welcome ${user.name}! Account created successfully`)
-      redirect('/dashboard')
+      redirect('/')
     }
     if (error) {
       toast('Something went Wrong')

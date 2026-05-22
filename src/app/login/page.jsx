@@ -31,7 +31,7 @@ const LoginPage = () => {
 
         if (data) {
             toast.success(`Welcome Back!`);
-            redirect('/dashboard');
+            redirect('/');
         }
 
         if (error) {

@@ -22,7 +22,6 @@ const HomePage = () => {
         >
           {post.imageUrl && (
             <div className="relative w-full aspect-auto">
-
               <Image
                 src={post.imageUrl}
                 alt="post"
@@ -31,7 +30,6 @@ const HomePage = () => {
                 className="w-full h-auto object-cover"
                 unoptimized
               />
-
             </div>
           )}
         </div>

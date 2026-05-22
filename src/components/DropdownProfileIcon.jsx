@@ -1,26 +1,39 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
-import { Avatar, Dropdown } from "@heroui/react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+
+import { authClient } from "@/lib/auth-client";
+import { Avatar, Dropdown } from "@heroui/react";
 
 export function DropdownProfileIcon({ user }) {
+
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
+  const closeDropdown = () => setOpen(false);
+
   const handleSignOut = async () => {
     await authClient.signOut();
-    setOpen(false);
+    closeDropdown();
     router.refresh();
     router.push("/");
   };
 
+  const menuItems = [
+    { href: "/", label: "Dashboard" },
+    { href: "/profile", label: "Profile" },
+    { href: "/messages", label: "Message" },
+    { href: "/create", label: "Post" },
+    { href: "/notification", label: "Notification" },
+    { href: "setting", label: "Settings" },
+  ];
+
   return (
     <Dropdown placement="bottom-end" isOpen={open} onOpenChange={setOpen}>
 
-      {/* Trigger */}
+      {/* Trigger Avatar */}
       <Dropdown.Trigger>
         <Avatar
           size="sm"
@@ -33,23 +46,18 @@ export function DropdownProfileIcon({ user }) {
         </Avatar>
       </Dropdown.Trigger>
 
-      {/* Panel */}
+      {/* Dropdown Panel */}
       <Dropdown.Popover
         className="
-          w-72
-          rounded-2xl
-          border border-neutral-200 dark:border-neutral-800
-          bg-white dark:bg-neutral-950
-          p-2
-        "
+          w-72 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-2 shadow-lg"
       >
 
-        {/* Profile */}
-        <div className="px-3 py-3 border-b border-neutral-100 dark:border-neutral-800">
+        {/* Profile Header */}
+        <div className="px-3 py-3 border-b border-neutral-200 dark:border-neutral-800">
 
           <Link
             href="/profile"
-            onClick={() => setOpen(false)}
+            onClick={closeDropdown}
             className="flex items-center gap-3"
           >
             <Avatar size="md" className="h-10 w-10">
@@ -70,42 +78,32 @@ export function DropdownProfileIcon({ user }) {
           </Link>
         </div>
 
-        {/* Menu */}
+        {/* Menu Items */}
         <div className="py-2">
 
-          {[
-            { href: "/", label: "Dashboard" },
-            { href: "/profile", label: "Profile" },
-            { href: "/message", label: "Message" },
-          ].map((item) => (
+          {menuItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              onClick={() => setOpen(false)}
-              className="
-                block
-                px-3 py-2
-                text-sm
-                text-neutral-700 dark:text-neutral-300
-                rounded-lg
-                hover:bg-neutral-100 dark:hover:bg-neutral-900
-              "
-            >
+              onClick={closeDropdown}
+              className="block px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-900 transition">
               {item.label}
             </Link>
           ))}
 
+          {/* Divider */}
           <div className="my-2 h-px bg-neutral-200 dark:bg-neutral-800" />
 
+          {/* Logout */}
           <button
             onClick={handleSignOut}
             className="
               w-full text-left
               px-3 py-2
-              text-sm
-              text-red-500
+              text-sm text-red-500
               rounded-lg
               hover:bg-red-50 dark:hover:bg-red-500/10
+              transition
             "
           >
             Log out

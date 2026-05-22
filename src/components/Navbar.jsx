@@ -4,8 +4,15 @@ import Link from "next/link";
 import ToggleTheme from "./ToggleTheam";
 import { FiSearch } from "react-icons/fi";
 import { DropdownProfileIcon } from "./DropdownProfileIcon";
+import { authClient } from "@/lib/auth-client";
+import { Button } from "@heroui/react";
 
 export default function Navbar() {
+  const { data: session } = authClient.useSession()
+  // console.log('session', session)
+  const user = session?.user
+  console.log(user)
+
   return (
     <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-black/60 backdrop-blur-xl border-b border-neutral-200 dark:border-neutral-800">
 
@@ -38,7 +45,11 @@ export default function Navbar() {
         <div className="flex items-center gap-3 shrink-0">
 
           <ToggleTheme />
-          <DropdownProfileIcon />
+          {
+            user? 
+            <DropdownProfileIcon user = {user} />
+            :<Button variant="outline" className="rounded-lg">Login</Button>
+          }
 
         </div>
 
