@@ -12,7 +12,7 @@ const MobileButtonMenuBar = () => {
   const pathname = usePathname() || "";
 
   const items = [
-    { id: "dashboard", icon: RxDashboard, path: "/" },
+    { id: "dashboard", icon: RxDashboard, path: "/dashboard" },
     { id: "message", icon: FiMessageCircle, path: "/messages" },
     { id: "post", icon: HiOutlinePlus, path: "/create" },
     { id: "notification", icon: FiBell, path: "/notification" },

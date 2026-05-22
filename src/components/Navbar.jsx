@@ -3,12 +3,10 @@
 import { useState } from "react"
 import Link from "next/link"
 import ToggleTheme from "./ToggleTheam"
-import { ProfileAvaterDropDownMenu } from "./ProfileAvaterDropDown"
-import { Button } from "@heroui/react"
+
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
-
+ 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-neutral-200 dark:border-neutral-800 bg-white/70 dark:bg-black/60 backdrop-blur-xl">
 
@@ -16,7 +14,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link
-          href="/"
+          href="/dashboard"
           className="text-xl font-semibold tracking-tight font-sora"
         >
           Novra
