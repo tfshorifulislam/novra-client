@@ -49,7 +49,7 @@ export function DropdownProfileIcon({ user }) {
       {/* Dropdown Panel */}
       <Dropdown.Popover
         className="
-          w-72 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-2 shadow-lg"
+          w-72 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-2 mr-3 sm:mr-7 md:mr-15 lg:mr-20 shadow-lg"
       >
 
         {/* Profile Header */}
