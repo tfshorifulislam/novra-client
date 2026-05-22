@@ -39,11 +39,11 @@ const LoginPage = () => {
         }
     };
 
-    // const handleLoginWithGoogle = async () => {
-    //     await authClient.signIn.social({
-    //         provider: 'google'
-    //     })
-    // }
+    const handleLoginWithGoogle = async () => {
+        await authClient.signIn.social({
+            provider: 'google'
+        })
+    }
 
     return (
         <div className="min-h-screen flex items-center justify-center px-4 bg-white dark:bg-neutral-950">
@@ -91,7 +91,7 @@ const LoginPage = () => {
 
                     {/* BUTTON */}
                     <Button type="submit"
-                    className="h-11 w-full rounded-2xl bg-black text-white dark:bg-white dark:text-black">
+                        className="h-11 w-full rounded-2xl bg-black text-white dark:bg-white dark:text-black">
                         Login
                     </Button>
                 </Form>
@@ -104,7 +104,9 @@ const LoginPage = () => {
                 </div>
 
                 {/* GOOGLE */}
-                <button className="w-full h-11 flex items-center justify-center gap-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900">
+                <button
+                onClick={handleLoginWithGoogle}
+                className="w-full h-11 flex items-center justify-center gap-3 rounded-2xl border border-neutral-200 dark:border-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-900">
                     <FcGoogle className="text-xl" />
                     <span className="text-sm">Continue with Google</span>
                 </button>

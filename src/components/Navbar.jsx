@@ -46,9 +46,15 @@ export default function Navbar() {
 
           <ToggleTheme />
           {
-            user? 
-            <DropdownProfileIcon user = {user} />
-            :<Button variant="outline" className="rounded-lg">Login</Button>
+            user ?
+              <DropdownProfileIcon user={user} />
+              : <Button
+                variant="outline"
+                className="rounded-lg">
+                <Link href={'/login'}>
+                  Login
+                </Link>
+              </Button>
           }
 
         </div>
