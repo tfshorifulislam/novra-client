@@ -12,8 +12,39 @@ import {
 } from "@heroui/react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
 
 const LoginPage = () => {
+
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const user = Object.fromEntries(formData.entries());
+
+        const { data, error } = await authClient.signIn.email({
+            email: user?.email,
+            password: user?.password,
+        });
+
+        if (data) {
+            toast.success(`Welcome Back!`);
+            redirect('/dashboard');
+        }
+
+        if (error) {
+            toast.error('Invalid email or password');
+        }
+    };
+
+    // const handleLoginWithGoogle = async () => {
+    //     await authClient.signIn.social({
+    //         provider: 'google'
+    //     })
+    // }
+
     return (
         <div className="min-h-screen flex items-center justify-center px-4 bg-white dark:bg-neutral-950">
 
@@ -30,7 +61,7 @@ const LoginPage = () => {
                 </div>
 
                 {/* FORM */}
-                <Form className="flex flex-col gap-5">
+                <Form className="flex flex-col gap-5" onSubmit={onSubmit}>
 
                     {/* EMAIL */}
                     <TextField isRequired name="email" type="email">
@@ -59,7 +90,8 @@ const LoginPage = () => {
                     </TextField>
 
                     {/* BUTTON */}
-                    <Button className="h-11 w-full rounded-2xl bg-black text-white dark:bg-white dark:text-black">
+                    <Button type="submit"
+                    className="h-11 w-full rounded-2xl bg-black text-white dark:bg-white dark:text-black">
                         Login
                     </Button>
                 </Form>

@@ -5,6 +5,7 @@ import Providers from "./providers"
 import { Geist, Geist_Mono } from "next/font/google"
 import SideBar from "../components/SideBar"
 import MobileButtonMenuBar from "@/components/MobileButtomMenuBar"
+import { Toaster } from "react-hot-toast"
 
 
 const geistSans = Geist({
@@ -47,6 +48,7 @@ export default function RootLayout({ children }) {
           {/* MOBILE NAV */}
           <MobileButtonMenuBar />
 
+        <Toaster />
         </Providers>
       </body>
     </html>

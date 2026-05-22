@@ -1,33 +1,28 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Button } from "@heroui/react";
 import { FiImage } from "react-icons/fi";
 
 const PostCreatePage = () => {
   const fileRef = useRef(null);
 
-  const [mounted, setMounted] = useState(false);
   const [text, setText] = useState("");
   const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   // IMAGE SELECT
   const handleImage = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
 
-    setFile(file);
-    setPreview(URL.createObjectURL(file));
+    setFile(selectedFile);
+    setPreview(URL.createObjectURL(selectedFile));
   };
 
-  // CLEAR
-  const handleClear = () => {
+  // RESET
+  const resetForm = () => {
     setText("");
     setPreview(null);
     setFile(null);
@@ -37,14 +32,16 @@ const PostCreatePage = () => {
     }
   };
 
-  // POST FUNCTION (🔥 FIXED)
+  // POST
   const handlePost = async () => {
+    if (!text.trim() && !file) return;
+
     try {
       setLoading(true);
 
       let imageUrl = "";
 
-      // STEP 1: upload image if exists
+      // upload image
       if (file) {
         const formData = new FormData();
         formData.append("image", file);
@@ -55,10 +52,10 @@ const PostCreatePage = () => {
         });
 
         const data = await res.json();
-        imageUrl = data.imageUrl;
+        imageUrl = data?.imageUrl || "";
       }
 
-      // STEP 2: create post
+      // create post
       await fetch("http://localhost:5000/posts", {
         method: "POST",
         headers: {
@@ -70,75 +67,63 @@ const PostCreatePage = () => {
         }),
       });
 
-      // RESET UI
-      handleClear();
-
-      alert("Post created!");
+      resetForm();
     } catch (err) {
-      console.log(err);
+      console.error("Post error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (!mounted) return null;
-
   return (
-    <div className="max-w-2xl mx-auto mt-10 px-4">
-      <form className="rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-5 shadow-sm">
+    <div className="max-w-2xl mx-auto px-4 py-6">
+      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 p-5">
 
-        <h1 className="text-lg font-semibold mb-4">
-          Create Post
-        </h1>
-
-        {/* TEXTAREA */}
+        {/* TEXT */}
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="What's on your mind?"
-          className="w-full resize-none min-h-[160px] p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 text-sm sm:text-base outline-none focus:min-h-[220px] transition-all"
+          className="w-full min-h-[140px] resize-none rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-4 text-sm outline-none"
         />
 
-        {/* PREVIEW */}
+        {/* IMAGE PREVIEW */}
         {preview && (
           <div className="mt-4">
             <img
               src={preview}
               alt="preview"
-              className="w-full max-h-[320px] object-cover rounded-2xl border"
+              className="w-full max-h-[320px] object-cover rounded-xl"
             />
           </div>
         )}
 
         {/* ACTIONS */}
-        <div className="flex items-center justify-between mt-5">
+        <div className="mt-5 flex items-center justify-between">
 
-          <div className="flex items-center gap-4">
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
+          >
+            <FiImage size={18} />
+            Image
+          </button>
 
-            <button
-              type="button"
-              onClick={() => fileRef.current?.click()}
-              className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300"
-            >
-              <FiImage size={20} />
-              <span className="text-sm font-medium">Image</span>
-            </button>
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={handleImage}
+          />
 
-            <input
-              ref={fileRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleImage}
-            />
-          </div>
-
-          <div className="flex gap-3">
+          <div className="flex gap-2">
 
             <Button
               type="button"
-              onClick={handleClear}
-              className="px-4 py-2 rounded-xl bg-neutral-200 dark:bg-neutral-800"
+              onClick={resetForm}
+              className="rounded-xl bg-neutral-200 dark:bg-neutral-800 px-4"
             >
               Clear
             </Button>
@@ -146,15 +131,16 @@ const PostCreatePage = () => {
             <Button
               type="button"
               onClick={handlePost}
-              disabled={!text.trim() || loading}
-              className="px-6 py-2 rounded-xl bg-black text-white dark:bg-white dark:text-black"
+              disabled={loading || (!text.trim() && !file)}
+              className="rounded-xl bg-black text-white dark:bg-white dark:text-black px-6"
             >
               {loading ? "Posting..." : "Post"}
             </Button>
 
           </div>
         </div>
-      </form>
+
+      </div>
     </div>
   );
 };
