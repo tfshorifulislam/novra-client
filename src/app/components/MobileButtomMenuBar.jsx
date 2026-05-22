@@ -4,19 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { RxDashboard } from "react-icons/rx";
-import { FiMessageCircle } from "react-icons/fi";
+import { FiMessageCircle, FiBell } from "react-icons/fi";
 import { CiSettings } from "react-icons/ci";
 import { HiOutlinePlus } from "react-icons/hi2";
-import { FiSearch } from "react-icons/fi";
 
 const MobileButtonMenuBar = () => {
   const pathname = usePathname() || "";
 
   const items = [
     { id: "dashboard", icon: RxDashboard, path: "/" },
-    { id: "post", icon: HiOutlinePlus, path: "/create" },
-    // { id: "search", icon: FiSearch, path: "/search" },
     { id: "message", icon: FiMessageCircle, path: "/messages" },
+    { id: "post", icon: HiOutlinePlus, path: "/create" },
+    { id: "notification", icon: FiBell, path: "/notification" },
     { id: "setting", icon: CiSettings, path: "/settings" },
   ];
 
@@ -32,15 +31,20 @@ const MobileButtonMenuBar = () => {
             <Link
               key={item.id}
               href={item.path}
-              className="flex flex-col items-center justify-center gap-1"
+              className="relative flex flex-col items-center justify-center"
             >
               <Icon
-                className={`text-[22px] ${
+                className={`text-[22px] transition-colors ${
                   active
                     ? "text-black dark:text-white"
                     : "text-neutral-500"
                 }`}
               />
+
+              {/* ACTIVE DOT */}
+              {active && (
+                <span className="absolute -bottom-1 h-1 w-1 rounded-full bg-black dark:bg-white" />
+              )}
             </Link>
           );
         })}
