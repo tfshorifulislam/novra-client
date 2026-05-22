@@ -1,38 +1,41 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { Button } from "@heroui/react";
-import { FiImage } from "react-icons/fi";
+import { useRef, useState } from "react";
+import { authClient } from "@/lib/auth-client";
+import { Avatar, Button } from "@heroui/react";
+import { FiImage, FiX } from "react-icons/fi";
 
-const PostCreatePage = () => {
+export default function PostCreatePage() {
   const fileRef = useRef(null);
 
+  const { data, isPending } = authClient.useSession();
+  const user = data?.user;
+
   const [text, setText] = useState("");
-  const [preview, setPreview] = useState(null);
   const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
+
+  if (isPending) return null;
 
   // IMAGE SELECT
   const handleImage = (e) => {
-    const selectedFile = e.target.files?.[0];
-    if (!selectedFile) return;
+    const f = e.target.files?.[0];
+    if (!f) return;
 
-    setFile(selectedFile);
-    setPreview(URL.createObjectURL(selectedFile));
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
   };
 
   // RESET
-  const resetForm = () => {
+  const reset = () => {
     setText("");
-    setPreview(null);
     setFile(null);
-
-    if (fileRef.current) {
-      fileRef.current.value = "";
-    }
+    setPreview("");
+    if (fileRef.current) fileRef.current.value = "";
   };
 
-  // POST
+  // CREATE POST
   const handlePost = async () => {
     if (!text.trim() && !file) return;
 
@@ -41,35 +44,44 @@ const PostCreatePage = () => {
 
       let imageUrl = "";
 
-      // upload image
+      // 1️⃣ upload image first
       if (file) {
         const formData = new FormData();
         formData.append("image", file);
 
-        const res = await fetch("http://localhost:5000/upload", {
+        const uploadRes = await fetch(`http://localhost:5000/upload`, {
           method: "POST",
           body: formData,
         });
 
-        const data = await res.json();
-        imageUrl = data?.imageUrl || "";
+        const uploadData = await uploadRes.json();
+        imageUrl = uploadData?.imageUrl || "";
       }
 
-      // create post
+      // 2️⃣ send post with user info
+      const postPayload = {
+        text,
+        imageUrl,
+
+        user: {
+          id: user?.id,
+          name: user?.name,
+          email: user?.email,
+          image: user?.image,
+        },
+      };
+
       await fetch("http://localhost:5000/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          text,
-          imageUrl,
-        }),
+        body: JSON.stringify(postPayload),
       });
 
-      resetForm();
+      reset();
     } catch (err) {
-      console.error("Post error:", err);
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -77,72 +89,68 @@ const PostCreatePage = () => {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
-      <div className="rounded-2xl border border-neutral-200 dark:border-neutral-800 p-5">
+      <div className="rounded-3xl border p-5 bg-white dark:bg-neutral-950">
 
-        {/* TEXT */}
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="What's on your mind?"
-          className="w-full min-h-[140px] resize-none rounded-xl border border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900 p-4 text-sm outline-none"
-        />
+        <div className="flex gap-4">
 
-        {/* IMAGE PREVIEW */}
-        {preview && (
-          <div className="mt-4">
-            <img
-              src={preview}
-              alt="preview"
-              className="w-full max-h-[320px] object-cover rounded-xl"
+          <Avatar src={user?.image} className="h-11 w-11" />
+
+          <div className="flex-1">
+
+            <textarea
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder={`What's on your mind, ${user?.name}?`}
+              className="w-full min-h-[120px] outline-none bg-transparent"
             />
-          </div>
-        )}
 
-        {/* ACTIONS */}
-        <div className="mt-5 flex items-center justify-between">
+            {/* preview */}
+            {preview && (
+              <div className="relative mt-3">
+                <img
+                  src={preview}
+                  className="rounded-2xl max-h-[400px] w-full object-cover"
+                />
 
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            className="flex items-center gap-2 text-sm text-neutral-600 dark:text-neutral-300"
-          >
-            <FiImage size={18} />
-            Image
-          </button>
+                <button
+                  onClick={() => setPreview("")}
+                  className="absolute top-2 right-2 bg-black/60 text-white p-2 rounded-full"
+                >
+                  <FiX />
+                </button>
+              </div>
+            )}
 
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={handleImage}
-          />
+            {/* actions */}
+            <div className="mt-4 flex justify-between border-t pt-4">
 
-          <div className="flex gap-2">
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="flex items-center gap-2 text-sm"
+              >
+                <FiImage /> Image
+              </button>
 
-            <Button
-              type="button"
-              onClick={resetForm}
-              className="rounded-xl bg-neutral-200 dark:bg-neutral-800 px-4"
-            >
-              Clear
-            </Button>
+              <input
+                ref={fileRef}
+                type="file"
+                hidden
+                accept="image/*"
+                onChange={handleImage}
+              />
 
-            <Button
-              type="button"
-              onClick={handlePost}
-              disabled={loading || (!text.trim() && !file)}
-              className="rounded-xl bg-black text-white dark:bg-white dark:text-black px-6"
-            >
-              {loading ? "Posting..." : "Post"}
-            </Button>
+              <Button
+                onClick={handlePost}
+                isDisabled={loading}
+              >
+                {loading ? "Posting..." : "Post"}
+              </Button>
+
+            </div>
 
           </div>
         </div>
-
       </div>
     </div>
   );
-};
-
-export default PostCreatePage;
+}
